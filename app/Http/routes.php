@@ -46,6 +46,9 @@ Route::group(['prefix' => 'tpi-v1', 'middleware' => 'Cors'], function()
 	Route::get('getdatatpi/kota', 'NelayanUserController@getdatatpikota');
 	Route::get('getdatatpi/lokasi', 'NelayanUserController@getdatatpilokasi');
 	Route::get('getdatatpi/nama', 'NelayanUserController@getdatatpinama');
+	Route::post('ketersediaan', 'NelayanUserController@inputketersediaan');
+	Route::post('kebutuhan', 'NelayanUserController@inputkebutuhan');
+	Route::get('getkebutuhan/{id_tpi}', 'NelayanUserController@getkebutuhan');
 });
 Route::group(['prefix' => 'kejahatan-v1', 'middleware' => 'Cors'], function()
 {

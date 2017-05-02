@@ -57,6 +57,75 @@ class NelayanUserController extends Controller
     {
         //
     }
+	
+	//TPI input ketersediaan ikan
+	public function inputketersediaan(Request $request){
+		$dt = Carbon::now();				
+		$param = array(
+			'id_tpi' => $request->input('id_tpi'), 
+			'jenis_ikan' => $request->input('jenis_ikan'),
+			'total_berat' => $request->input('berat'),
+			'harga_perkg'	=> $request->input('harga'),
+            'created_at' => $dt
+        );
+        
+		$result = DB::table('tpi_ketersediaan')->insert($param);
+		if($result){
+			return response()->json(
+					array(
+						'status' => true,
+						'msg' => 'data berhasil disimpan!'
+					), 200);	
+		}else{
+			return response()->json(
+				array('status' => false,
+					'msg' => 'terjadi kesalahan!'), 200);
+		}
+	}
+	
+	//PEMBELI input kebutuhan ikan
+	public function inputkebutuhan(Request $request){
+		$dt = Carbon::now();		
+		$param = array(
+			'id_tpi' => $request->input('id_tpi'),
+			'id_user' => $request->input('id_user'),
+			'jenis_ikan' => $request->input('jenis_ikan'),
+			'total_berat' => $request->input('berat'),
+            'created_at' => $dt
+        );
+        
+		$result = DB::table('tpi_kebutuhan')->insert($param);
+		if($result){
+			return response()->json(
+					array(
+						'status' => true,
+						'msg' => 'data berhasil disimpan!'
+					), 200);	
+		}else{
+			return response()->json(
+				array('status' => false,
+					'msg' => 'terjadi kesalahan!'), 200);
+		}
+	}
+	
+	public function getkebutuhan($id_tpi){
+        $result = DB::table('tpi_kebutuhan')
+			->where('id_tpi', $id_tpi)
+            ->get();
+		
+        if($result){
+            return response()->json(
+                array(
+				'data' => $result,
+				'status' => true,
+                'msg' => 'data berhasil diambil!'), 200);
+        }else{
+            return response()->json(
+                array('status' => false,
+                    'msg' => 'terjadi kesalahan silahkan cek koneksi!'), 200);
+        }
+	}
+	
 	public function panicbuttonstore(Request $request)
     {
         $dt = Carbon::now();
@@ -186,12 +255,12 @@ class NelayanUserController extends Controller
             'nomor_identitas' => $request->input('nomor_identitas')
         );
         
-        $result = DB::table('nelayan_detailnelayan')
+        $result = DB::table('detail_users')
             ->where('id_user', $id_user)
             ->update($param);
         
         if($result){
-			$result2=DB::table('nelayan_detailnelayan')
+			$result2=DB::table('detail_users')
 			->select('*')
             ->where('id_user', $id_user)
             ->get();
@@ -212,7 +281,7 @@ class NelayanUserController extends Controller
         $param = array(
             'firstname' => $request->input('firstname')
         );
-        $result = DB::table('nelayan_detailnelayan')
+        $result = DB::table('detail_users')
             ->where('id_user', $id_user)
             ->update($param);
         if($result){
@@ -234,7 +303,7 @@ class NelayanUserController extends Controller
             
             'lastname' => $request->input('lastname')
 		);
-        $result = DB::table('nelayan_detailnelayan')
+        $result = DB::table('detail_users')
             ->where('id_user', $id_user)
             ->update($param);
         if($result){
@@ -256,7 +325,7 @@ class NelayanUserController extends Controller
             'tempat_lahir' => $request->input('tempat_lahir')
         );
         
-        $result = DB::table('nelayan_detailnelayan')
+        $result = DB::table('detail_users')
             ->where('id_user', $id_user)
             ->update($param);
         
@@ -278,7 +347,7 @@ class NelayanUserController extends Controller
             'tanggal_lahir' => $request->input('tanggal_lahir')
         );
         
-        $result = DB::table('nelayan_detailnelayan')
+        $result = DB::table('detail_users')
             ->where('id_user', $id_user)
             ->update($param);
         
@@ -301,7 +370,7 @@ class NelayanUserController extends Controller
             'foto_source' => $request->input('foto_source')
         );
         
-        $result = DB::table('nelayan_detailnelayan')
+        $result = DB::table('detail_users')
             ->where('id_user', $id_user)
             ->update($param);
         
@@ -323,7 +392,7 @@ class NelayanUserController extends Controller
             'nomor_identitas' => $request->input('nomor_identitas')
         );
         
-        $result = DB::table('nelayan_detailnelayan')
+        $result = DB::table('detail_users')
             ->where('id_user', $id_user)
             ->update($param);
         
@@ -838,7 +907,7 @@ class NelayanUserController extends Controller
 	public function profileshowbyid($id_user)
     {
 		$dt = Carbon::now();
-        $result = DB::table('nelayan_detailnelayan')
+        $result = DB::table('detail_users')
             ->where('id_user', $id_user)
             ->get();
 		
@@ -929,9 +998,9 @@ class NelayanUserController extends Controller
 			
 		}else{
 		$getpostdetail=DB::table('nelayan_postlaporan')
-					->join('nelayan_user', 'nelayan_postlaporan.id_user', '=', 'nelayan_user.id_user')
+					->join('users', 'nelayan_postlaporan.id_user', '=', 'users.id_user')
 					->join($fixdetailtabel, 'nelayan_postlaporan.id_laporan', '=', $fixdetailtabel.'.id_laporan')
-					->select('nelayan_postlaporan.*','nelayan_user.username',$fixdetailtabel.'.*')
+					->select('nelayan_postlaporan.*','users.username',$fixdetailtabel.'.*')
 					->get();
 			
 		}
@@ -943,7 +1012,7 @@ class NelayanUserController extends Controller
 	}
 	
 	public function authenticate(Request $request){
-        $user = DB::table('nelayan_user')
+        $user = DB::table('users')
             ->where('username', '=', $request->input('username'))
             ->get();
 		$iduser=null;
@@ -962,10 +1031,10 @@ class NelayanUserController extends Controller
 					$result = DB::table('status_online')->insert($param);
 					 
 					if($result){
-						 $detailuser = DB::table('nelayan_user')
-						 ->join('nelayan_detailnelayan', 'nelayan_user.id_user', '=', 'nelayan_detailnelayan.id_user')
-						 ->join('status_online', 'nelayan_user.id_user', '=', 'status_online.id_user')
-						->where('nelayan_user.id_user', '=', $iduser)
+						 $detailuser = DB::table('users')
+						 ->join('detail_users', 'users.id_user', '=', 'detail_users.id_user')
+						 ->join('status_online', 'users.id_user', '=', 'status_online.id_user')
+						->where('users.id_user', '=', $iduser)
 						->first();
 						
 						return response()->json(
@@ -1013,14 +1082,14 @@ class NelayanUserController extends Controller
             'role' => $request->input('role')
         );
 
-        $cek_availability = DB::table('nelayan_user')->where('username', '=', $request->input('username'))->get();
+        $cek_availability = DB::table('users')->where('username', '=', $request->input('username'))->get();
         
 		if(!$cek_availability){
-            $result = DB::table('nelayan_user')->insert($param);
+            $result = DB::table('users')->insert($param);
 			
             if($result){
 				
-                $user = DB::table('nelayan_user')
+                $user = DB::table('users')
                     ->where('username', '=', $request->input('username'))
                     ->get();
 					
@@ -1031,7 +1100,7 @@ class NelayanUserController extends Controller
 					$param2=array(
 						'id_user' => $iduser
 					);
-					$result2 = DB::table('nelayan_detailnelayan')->insert($param2);
+					$result2 = DB::table('detail_users')->insert($param2);
 				if($result2){
 					return response()->json(
 						array(
@@ -1040,7 +1109,7 @@ class NelayanUserController extends Controller
 							'msg' => 'data berhasil disimpan!'
 						), 200);	
 				}else{
-					DB::table('nelayan_user')->where('username', '=', $request->input('username'))->delete();
+					DB::table('users')->where('username', '=', $request->input('username'))->delete();
 					return response()->json(
 					array('status' => false,
 							'msg' => 'terjadi kesalahan!'), 200);
