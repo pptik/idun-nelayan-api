@@ -17,58 +17,62 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'nelayan-v1', 'middleware' => 'Cors'], function()
 {
-	Route::post('store', 'NelayanUserController@store');
-	Route::post('editprofile/{id_user}', 'NelayanUserController@editprofile');
-	Route::post('editfirstname/{id_user}', 'NelayanUserController@editfirstname');
-	Route::post('editlastname/{id_user}', 'NelayanUserController@editlastname');
-	Route::post('edittempatlahir/{id_user}', 'NelayanUserController@edittempatlahir');
-	Route::post('edittanggallahir/{id_user}', 'NelayanUserController@edittanggallahir');
-	Route::post('editfoto/{id_user}', 'NelayanUserController@editfoto');
-	Route::post('editnoidentitas/{id_user}', 'NelayanUserController@editnoidentitas');
-	Route::post('authenticate', 'NelayanUserController@authenticate');
-	Route::get('/profileshowbyid/{id_user}', 'NelayanUserController@profileshowbyid');
-	Route::get('/showriwayatbyid/{id_user}', 'NelayanUserController@showriwayatbyid');
-	Route::get('/jenisikan', 'NelayanUserController@getjenisikan');
+	Route::post('store', 'NelayanUserV2Controller@store');
+	Route::post('editprofile/{id_user}', 'NelayanUserV2Controller@editprofile');
+	Route::post('editfirstname/{id_user}', 'NelayanUserV2Controller@editfirstname');
+	Route::post('editlastname/{id_user}', 'NelayanUserV2Controller@editlastname');
+	Route::post('edittempatlahir/{id_user}', 'NelayanUserV2Controller@edittempatlahir');
+	Route::post('edittanggallahir/{id_user}', 'NelayanUserV2Controller@edittanggallahir');
+	Route::post('editfoto/{id_user}', 'NelayanUserV2Controller@editfoto');
+	Route::post('editnoidentitas/{id_user}', 'NelayanUserV2Controller@editnoidentitas');
+	Route::post('authenticate', 'NelayanUserV2Controller@authenticate');
+	Route::get('/profileshowbyid/{id_user}', 'NelayanUserV2Controller@profileshowbyid');
+	Route::get('/showriwayatbyid/{id_user}', 'NelayanUserV2Controller@showriwayatbyid');
+	Route::get('/jenisikan', 'NelayanUserV2Controller@getjenisikan');
 
 });
 
 Route::group(['prefix' => 'location-v1', 'middleware' => 'Cors'], function()
 {
 	
-	Route::post('mapview', 'NelayanUserController@mapview');
+	Route::post('mapview', 'NelayanUserV2Controller@mapview');
 });
 Route::group(['prefix' => 'tpi-v1', 'middleware' => 'Cors'], function()
 {
-	Route::get('/userjointpi/{id_user}/{id_tpi}', 'NelayanUserController@userjointpi');
-	Route::get('getdatatpi', 'NelayanUserController@getdatatpi');
-	Route::get('getrequest', 'NelayanUserController@getrequestdatatpi');
-	Route::get('getdatatpi/provinsi', 'NelayanUserController@getdatatpiprovinsi');
-	Route::get('getdatatpi/kota', 'NelayanUserController@getdatatpikota');
-	Route::get('getdatatpi/lokasi', 'NelayanUserController@getdatatpilokasi');
-	Route::get('getdatatpi/nama', 'NelayanUserController@getdatatpinama');
-	Route::post('ketersediaan', 'NelayanUserController@inputketersediaan');
-	Route::post('kebutuhan', 'NelayanUserController@inputkebutuhan');
-	Route::get('getkebutuhan/{id_tpi}', 'NelayanUserController@getkebutuhan');
+	Route::get('/userjointpi/{id_user}/{id_tpi}', 'NelayanUserV2Controller@userjointpi');
+	Route::get('getdatatpi', 'NelayanUserV2Controller@getdatatpi');
+	Route::get('getrequest', 'NelayanUserV2Controller@getrequestdatatpi');
+	Route::get('getdatatpi/provinsi', 'NelayanUserV2Controller@getdatatpiprovinsi');
+	Route::get('getdatatpi/kota', 'NelayanUserV2Controller@getdatatpikota');
+	Route::get('getdatatpi/lokasi', 'NelayanUserV2Controller@getdatatpilokasi');
+	Route::get('getdatatpi/nama', 'NelayanUserV2Controller@getdatatpinama');
+	Route::post('ketersediaan', 'NelayanUserV2Controller@inputketersediaan');
+	Route::post('kebutuhan', 'NelayanUserV2Controller@inputkebutuhan');
+	Route::get('getkebutuhan/{id_tpi}', 'NelayanUserV2Controller@getkebutuhan');
 });
 Route::group(['prefix' => 'kejahatan-v1', 'middleware' => 'Cors'], function()
 {
-	Route::post('store', 'NelayanUserController@kejahatanstore');
+	Route::post('store', 'NelayanUserV2Controller@kejahatanstore');
 });
 Route::group(['prefix' => 'cuaca-v1', 'middleware' => 'Cors'], function()
 {
-	Route::post('store', 'NelayanUserController@cuacastore');
+	Route::post('store', 'NelayanUserV2Controller@cuacastore');
 });
 Route::group(['prefix' => 'keadaanlaut-v1', 'middleware' => 'Cors'], function()
 {
-	Route::post('store', 'NelayanUserController@keadaanlautstore');
+	Route::post('store', 'NelayanUserV2Controller@keadaanlautstore');
 });
 Route::group(['prefix' => 'panicbutton-v1', 'middleware' => 'Cors'], function()
 {
-	Route::post('store', 'NelayanUserController@panicbuttonstore');
+	Route::post('store', 'NelayanUserV2Controller@panicbuttonstore');
 });
 Route::group(['prefix' => 'hasiltangkapan-v1', 'middleware' => 'Cors'], function()
 {
-	Route::get('infotambahan', 'NelayanUserController@infotambahan');
-	Route::post('store', 'NelayanUserController@hasiltangkapanstore');
+	Route::get('infotambahan', 'NelayanUserV2Controller@infotambahan');
+	Route::post('store', 'NelayanUserV2Controller@hasiltangkapanstore');
 	
+});
+Route::group(['prefix' => 'permintaanikan-v1', 'middleware' => 'Cors'], function()
+{
+	Route::post('store', 'NelayanUserV2Controller@inputkebutuhan');	
 });
