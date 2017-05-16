@@ -49,6 +49,7 @@ Route::group(['prefix' => 'tpi-v1', 'middleware' => 'Cors'], function()
 	Route::post('ketersediaan', 'NelayanUserV2Controller@inputketersediaan');
 	Route::post('kebutuhan', 'NelayanUserV2Controller@inputkebutuhan');
 	Route::get('getkebutuhan/{id_tpi}', 'NelayanUserV2Controller@getkebutuhan');
+	Route::get('getketersediaan/{id_tpi}', 'NelayanUserV2Controller@getketersediaan');
 });
 Route::group(['prefix' => 'kejahatan-v1', 'middleware' => 'Cors'], function()
 {

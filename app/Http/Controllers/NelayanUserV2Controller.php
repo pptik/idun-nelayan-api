@@ -168,7 +168,34 @@ class NelayanUserV2Controller extends Controller
 	
 	public function getkebutuhan($id_tpi){
         $result = DB::table('tpi_kebutuhan')
-			->where('id_tpi', $id_tpi)
+			->select('tpi_kebutuhan.*'
+						, DB::raw('(SELECT jenis_ikan.nama_ikan FROM jenis_ikan WHERE jenis_ikan.id_jenisikan = tpi_kebutuhan.jenis_ikan) as nama_ikan')
+						, DB::raw('(SELECT users.username FROM users WHERE users.id_user = tpi_kebutuhan.id_user) as username')
+						, DB::raw('(SELECT detail_users.firstname FROM detail_users WHERE detail_users.id_user = tpi_kebutuhan.id_user) as firstname')
+						, DB::raw('(SELECT detail_users.lastname FROM detail_users WHERE detail_users.id_user = tpi_kebutuhan.id_user) as lastname'))
+			->where('tpi_kebutuhan.id_tpi', $id_tpi)
+            ->get();
+		
+        if($result){
+            return response()->json(
+                array(
+				'data' => $result,
+				'status' => true,
+                'msg' => 'data berhasil diambil!'), 200);
+        }else{
+            return response()->json(
+                array('status' => false,
+                    'msg' => 'terjadi kesalahan silahkan cek koneksi!'), 200);
+        }
+	}
+
+	public function getketersediaan($id_tpi){
+        $result = DB::table('tpi_ketersediaan')
+			->join('tpi_detail', 'tpi_ketersediaan.id_tpi', '=', 'tpi_detail.id_tpi')
+			->join('jenis_ikan', 'tpi_ketersediaan.jenis_ikan', '=', 'jenis_ikan.id_jenisikan')
+			->select('tpi_detail.nama_tpi', 'jenis_ikan.nama_ikan','tpi_ketersediaan.total_berat','tpi_ketersediaan.harga_perkg'
+			, 'tpi_ketersediaan.created_at', 'tpi_ketersediaan.foto_source', 'tpi_ketersediaan.video_source')
+			->where('tpi_ketersediaan.id_tpi', $id_tpi)
             ->get();
 		
         if($result){
