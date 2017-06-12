@@ -29,12 +29,14 @@ Route::group(['prefix' => 'nelayan-v1', 'middleware' => 'Cors'], function()
 	Route::get('/profileshowbyid/{id_user}', 'NelayanUserV2Controller@profileshowbyid');
 	Route::get('/showriwayatbyid/{id_user}', 'NelayanUserV2Controller@showriwayatbyid');
 	Route::get('/jenisikan', 'NelayanUserV2Controller@getjenisikan');
-
+	Route::get('/jenislog', 'NelayanUserV2Controller@getjenislog');
+	Route::get('/wilayah', 'NelayanUserV2Controller@getwilayah');
+	Route::get('/gerombolanikan', 'NelayanUserV2Controller@getgerombolanikan');
+	Route::get('/aktivitas', 'NelayanUserV2Controller@getaktivitas');
 });
 
 Route::group(['prefix' => 'location-v1', 'middleware' => 'Cors'], function()
 {
-	
 	Route::post('mapview', 'NelayanUserV2Controller@mapview');
 });
 Route::group(['prefix' => 'tpi-v1', 'middleware' => 'Cors'], function()
@@ -71,9 +73,15 @@ Route::group(['prefix' => 'hasiltangkapan-v1', 'middleware' => 'Cors'], function
 {
 	Route::get('infotambahan', 'NelayanUserV2Controller@infotambahan');
 	Route::post('store', 'NelayanUserV2Controller@hasiltangkapanstore');
-	
+	Route::post('penangkapan', 'NelayanUserV2Controller@storePenangkapan');
+	Route::post('aktivitas', 'NelayanUserV2Controller@storeAktivitasPenangkapan');
+	Route::post('komposisihasil', 'NelayanUserV2Controller@storeKomposisiPenangkapan');
 });
 Route::group(['prefix' => 'permintaanikan-v1', 'middleware' => 'Cors'], function()
 {
 	Route::post('store', 'NelayanUserV2Controller@inputkebutuhan');	
+});
+Route::group(['prefix' => 'datakapal-v1', 'middleware' => 'Cors'], function()
+{
+	Route::get('search/{value}', 'NelayanUserV2Controller@searchkapal');
 });
