@@ -446,13 +446,20 @@ class NelayanUserV2Controller extends Controller
     {
         $dt = Carbon::now();  
         $param = array(
-            'firstname' => $request->input('firstname')
+            'nama_depan' => $request->input('firstname')
         );
-        $result = DB::table('detail_users')
+
+		$role = DB::table('user_')->where('id_user', $id_user)->first()->role;
+		$fixdetailtabel = "";
+		if($role == '1')
+			$fixdetailtabel = 'user_nelayandetail';
+		else if($role == '3')
+			$fixdetailtabel = 'user_pembelidetail';	
+		
+        $result = DB::table($fixdetailtabel)
             ->where('id_user', $id_user)
             ->update($param);
         if($result){
-			
                 return response()->json(
                 array(
 						'status' => true,
@@ -463,18 +470,25 @@ class NelayanUserV2Controller extends Controller
                       'msg' => 'terjadi kesalahan saat update!'), 200);
             }
     }
-	 public function editlastname(Request $request, $id_user)
+	
+	public function editlastname(Request $request, $id_user)
     {
         $dt = Carbon::now();  
         $param = array(
-            
-            'lastname' => $request->input('lastname')
+            'nama_belakang' => $request->input('lastname')
 		);
-        $result = DB::table('detail_users')
+
+		$role = DB::table('user_')->where('id_user', $id_user)->first()->role;
+		$fixdetailtabel = "";
+		if($role == '1')
+			$fixdetailtabel = 'user_nelayandetail';
+		else if($role == '3')
+			$fixdetailtabel = 'user_pembelidetail';	
+
+        $result = DB::table($fixdetailtabel)
             ->where('id_user', $id_user)
             ->update($param);
         if($result){
-			
                 return response()->json(
                 array(
 						'status' => true,
@@ -485,7 +499,37 @@ class NelayanUserV2Controller extends Controller
                       'msg' => 'terjadi kesalahan saat update!'), 200);
             }
     }
-	 public function edittempatlahir(Request $request, $id_user)
+
+	public function editaddress(Request $request, $id_user)
+    {
+        $dt = Carbon::now();  
+        $param = array(
+            'alamat' => $request->input('address')
+		);
+
+		$role = DB::table('user_')->where('id_user', $id_user)->first()->role;
+		$fixdetailtabel = "";
+		if($role == '1')
+			$fixdetailtabel = 'user_nelayandetail';
+		else if($role == '3')
+			$fixdetailtabel = 'user_pembelidetail';	
+
+        $result = DB::table($fixdetailtabel)
+            ->where('id_user', $id_user)
+            ->update($param);
+        if($result){
+                return response()->json(
+                array(
+						'status' => true,
+                      'msg' => 'data berhasil terupdate!'), 200);
+            }else{
+                return response()->json(
+                array('status' => false, 
+                      'msg' => 'terjadi kesalahan saat update!'), 200);
+            }
+    }
+
+	public function edittempatlahir(Request $request, $id_user)
     {
         $dt = Carbon::now();  
         $param = array(
@@ -1034,7 +1078,7 @@ class NelayanUserV2Controller extends Controller
 				->where('user_.id_user', $id_user)
 				->get();
 			}
-			else if($role == '2'){
+			else if($role == '3'){
 				 $result2 = DB::table('user_')
 				->join('user_pembelidetail', 'user_.id_user', '=', 'user_pembelidetail.id_user')
 				->where('user_.id_user', $id_user)
@@ -1374,24 +1418,61 @@ class NelayanUserV2Controller extends Controller
 			}
     }
 
-	public function getUserAktivitas($userId, $jenisLog)
+	public function getUserAktivitas($userId)
     {
-		//return $userId . " " . $jenisLog;
-		$result = DB::select(
+		$penangkapan_jenislog1 = DB::table('laporan_penangkapan')
+						->where('laporan_penangkapan.id_user', '=', $userId)
+						->where('laporan_penangkapan.id_log', '=', '1')
+						->get();
+
+		$penangkapan_jenislog2 = DB::table('laporan_penangkapan')
+						->where('laporan_penangkapan.id_user', '=', $userId)
+						->where('laporan_penangkapan.id_log', '=', '2')
+						->get();
+		
+		$hasil = array();
+		$log = array();
+		foreach($penangkapan_jenislog1 as $p){
+			$aktivitas = DB::select(
 					DB::raw("SELECT
 								CONCAT('Aktivitas tgl. ', tanggal) AS nama_aktivitas,
 								B.*
 							FROM
 								laporan_penangkapan A
-							JOIN laporan_penangkapanaktivitasdetail B ON B.id_laporanpenangkapan = A.id_laporanpenangkapan
+							RIGHT JOIN laporan_penangkapanaktivitasdetail B ON B.id_laporanpenangkapan = A.id_laporanpenangkapan
 							WHERE
-								A.id_user = ?
-							AND A.id_log = ?"),array($userId, $jenisLog));
-		if($result){
+								A.id_user = ? AND 
+								A.id_log = ?"),array($p->id_user, $p->id_log));
+			
+
+			array_push($log, array('detail' => $p, 'aktivitas' => $aktivitas));
+
+		}
+
+		foreach($penangkapan_jenislog2 as $p){
+			$iduser=$p->id_user;
+
+			$aktivitas = DB::select(
+					DB::raw("SELECT
+								CONCAT('Aktivitas tgl. ', tanggal) AS nama_aktivitas,
+								B.*
+							FROM
+								laporan_penangkapan A
+							RIGHT JOIN laporan_penangkapanaktivitasdetail B ON B.id_laporanpenangkapan = A.id_laporanpenangkapan
+							WHERE
+								A.id_user = ? AND
+								A.id_log = ?"),array($p->id_user, $p->id_log));
+			
+			array_push($log, array('detail' => $p, 'aktivitas' => $aktivitas));
+		}
+
+		array_push($hasil, $log);
+					
+		if($penangkapan_jenislog1){
 			return response()->json(
-                array('results' => $result,
+                array('log' => $hasil[0],
 				'status' => true,
-                    'msg' => 'data berhasil diambil!'), 200);
+                'msg' => 'data berhasil diambil!'), 200);
 		}
 		else{
 				return response()->json(

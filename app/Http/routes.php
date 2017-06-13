@@ -21,6 +21,7 @@ Route::group(['prefix' => 'nelayan-v1', 'middleware' => 'Cors'], function()
 	Route::post('editprofile/{id_user}', 'NelayanUserV2Controller@editprofile');
 	Route::post('editfirstname/{id_user}', 'NelayanUserV2Controller@editfirstname');
 	Route::post('editlastname/{id_user}', 'NelayanUserV2Controller@editlastname');
+	Route::post('editaddress/{id_user}', 'NelayanUserV2Controller@editaddress');
 	Route::post('edittempatlahir/{id_user}', 'NelayanUserV2Controller@edittempatlahir');
 	Route::post('edittanggallahir/{id_user}', 'NelayanUserV2Controller@edittanggallahir');
 	Route::post('editfoto/{id_user}', 'NelayanUserV2Controller@editfoto');
@@ -33,7 +34,7 @@ Route::group(['prefix' => 'nelayan-v1', 'middleware' => 'Cors'], function()
 	Route::get('/wilayah', 'NelayanUserV2Controller@getwilayah');
 	Route::get('/gerombolanikan', 'NelayanUserV2Controller@getgerombolanikan');
 	Route::get('/aktivitas', 'NelayanUserV2Controller@getaktivitas');
-	Route::get('/useraktivitas/{id_user}/{jenis_log}', 'NelayanUserV2Controller@getUserAktivitas');
+	Route::get('/useraktivitas/{id_user}', 'NelayanUserV2Controller@getUserAktivitas');
 });
 
 Route::group(['prefix' => 'location-v1', 'middleware' => 'Cors'], function()
