@@ -1041,9 +1041,12 @@ class NelayanUserV2Controller extends Controller
 				->get();
 			}
 			
+			$resultTPI=DB::table('tpi_detail')
+					->get();
+
 			return response()->json(
                 array('profileuser' => $result2,
-				//'tpi' => $result2,
+				'tpi' => $resultTPI,
 				'status' => true,
                     'msg' => 'data berhasil diambil!'), 200);
 		}
@@ -1358,6 +1361,32 @@ class NelayanUserV2Controller extends Controller
 				->where('detail_kapal.nama_kapal', 'LIKE', '%' . $kapal . '%')
 				->get();
 
+		if($result){
+			return response()->json(
+                array('results' => $result,
+				'status' => true,
+                    'msg' => 'data berhasil diambil!'), 200);
+		}
+		else{
+				return response()->json(
+					array('status' => false,
+						'msg' => 'terjadi kesalahan silahkan cek koneksi!'), 200);
+			}
+    }
+
+	public function getUserAktivitas($userId, $jenisLog)
+    {
+		//return $userId . " " . $jenisLog;
+		$result = DB::select(
+					DB::raw("SELECT
+								CONCAT('Aktivitas tgl. ', tanggal) AS nama_aktivitas,
+								B.*
+							FROM
+								laporan_penangkapan A
+							JOIN laporan_penangkapanaktivitasdetail B ON B.id_laporanpenangkapan = A.id_laporanpenangkapan
+							WHERE
+								A.id_user = ?
+							AND A.id_log = ?"),array($userId, $jenisLog));
 		if($result){
 			return response()->json(
                 array('results' => $result,
