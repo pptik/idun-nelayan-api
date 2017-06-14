@@ -1497,17 +1497,12 @@ class NelayanUserV2Controller extends Controller
 								A.id_aktivitasdetail = ?
 							GROUP BY nama_ikan"),array($aktivitasId));
 		
-		if($komposisitangkapan){
-			return response()->json(
-                array('komposisitangkapan' => $komposisitangkapan,
-				'status' => true,
-                'msg' => 'data berhasil diambil!'), 200);
-		}
-		else{
-				return response()->json(
-					array('status' => false,
-						'msg' => 'terjadi kesalahan silahkan cek koneksi!'), 200);
-			}
+
+		return response()->json(
+			array('komposisitangkapan' => $komposisitangkapan,
+			'status' => true,
+			'msg' => 'data berhasil diambil!'), 200);
+	
 	}
 
 }
