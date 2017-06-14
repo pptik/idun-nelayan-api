@@ -35,6 +35,7 @@ Route::group(['prefix' => 'nelayan-v1', 'middleware' => 'Cors'], function()
 	Route::get('/gerombolanikan', 'NelayanUserV2Controller@getgerombolanikan');
 	Route::get('/aktivitas', 'NelayanUserV2Controller@getaktivitas');
 	Route::get('/useraktivitas/{id_user}', 'NelayanUserV2Controller@getUserAktivitas');
+	Route::get('/komposisitangkapan/{id_aktivitas}', 'NelayanUserV2Controller@getKomposisiTangkapan');
 });
 
 Route::group(['prefix' => 'location-v1', 'middleware' => 'Cors'], function()

@@ -1435,6 +1435,7 @@ class NelayanUserV2Controller extends Controller
 		$hasil = array();
 		$log = array();
 		foreach($penangkapan_jenislog1 as $p){
+
 			$aktivitas = DB::select(
 					DB::raw("SELECT
 								CONCAT('Aktivitas tgl. ', tanggal) AS nama_aktivitas,
@@ -1445,7 +1446,6 @@ class NelayanUserV2Controller extends Controller
 							WHERE
 								A.id_user = ? AND 
 								A.id_log = ?"),array($p->id_user, $p->id_log));
-			
 
 			array_push($log, array('detail' => $p, 'aktivitas' => $aktivitas));
 
@@ -1482,5 +1482,32 @@ class NelayanUserV2Controller extends Controller
 						'msg' => 'terjadi kesalahan silahkan cek koneksi!'), 200);
 			}
     }
+
+	public function getKomposisiTangkapan($aktivitasId)
+    {
+		$komposisitangkapan = DB::select(
+					DB::raw("SELECT
+								A.id_jenisikan,
+								(SELECT B.nama_ikan FROM jenis_ikan B WHERE B.id_jenisikan = A.id_jenisikan) as nama_ikan,
+								SUM(A.Ekor) as ekor,
+								SUM(A.KG) as kg
+							FROM
+								laporan_penangkapankomposisi A
+							WHERE
+								A.id_aktivitasdetail = ?
+							GROUP BY nama_ikan"),array($aktivitasId));
+		
+		if($komposisitangkapan){
+			return response()->json(
+                array('komposisitangkapan' => $komposisitangkapan,
+				'status' => true,
+                'msg' => 'data berhasil diambil!'), 200);
+		}
+		else{
+				return response()->json(
+					array('status' => false,
+						'msg' => 'terjadi kesalahan silahkan cek koneksi!'), 200);
+			}
+	}
 
 }
