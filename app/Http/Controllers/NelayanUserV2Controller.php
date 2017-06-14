@@ -1329,6 +1329,8 @@ class NelayanUserV2Controller extends Controller
             'id_kapal' => $request->input('id_kapal'),
 			'id_wilayah' => $request->input('id_wilayah'),
 			'DPI' => $request->input('daerah_tangkapan_ikan'),
+			'abk_wni' => $request->input('jumlah_abk_wni'),
+			'abk_wna' => $request->input('jumlah_abk_wna'),
 			'id_log' => $request->input('jenis_log'),
 			'trip_ke' => $request->input('trip_ke'),
 			'tanggal_berangkat' => Carbon::parse($request->input('tanggal_keberangkatan')),
@@ -1420,15 +1422,15 @@ class NelayanUserV2Controller extends Controller
 
 	public function getUserAktivitas($userId)
     {
-		$penangkapan_jenislog1 = DB::table('laporan_penangkapan')
-						->where('laporan_penangkapan.id_user', '=', $userId)
-						->where('laporan_penangkapan.id_log', '=', '1')
-						->get();
+		$penangkapan_jenislog1 = DB::select(
+					DB::raw("SELECT A.*, (SELECT B.nama_kapal FROM detail_kapal B WHERE B.id_kapal = A.id_kapal) as nama_kapal FROM laporan_penangkapan A
+							 WHERE A.id_user = ? 
+							 AND A.id_log = ?"),array($userId, '1'));
 
-		$penangkapan_jenislog2 = DB::table('laporan_penangkapan')
-						->where('laporan_penangkapan.id_user', '=', $userId)
-						->where('laporan_penangkapan.id_log', '=', '2')
-						->get();
+		$penangkapan_jenislog2 = DB::select(
+					DB::raw("SELECT A.*, (SELECT B.nama_kapal FROM detail_kapal B WHERE B.id_kapal = A.id_kapal) as nama_kapal FROM laporan_penangkapan A
+							 WHERE A.id_user = ? 
+							 AND A.id_log = ?"),array($userId, '2'));
 		
 		$hasil = array();
 		$log = array();
