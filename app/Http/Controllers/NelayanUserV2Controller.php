@@ -1446,7 +1446,8 @@ class NelayanUserV2Controller extends Controller
 							RIGHT JOIN laporan_penangkapanaktivitasdetail B ON B.id_laporanpenangkapan = A.id_laporanpenangkapan
 							WHERE
 								A.id_user = ? AND 
-								A.id_log = ?"),array($p->id_user, $p->id_log));
+								A.id_log = ? AND
+								A.id_laporanpenangkapan = ?"),array($p->id_user, $p->id_log, $p->id_laporanpenangkapan));
 
 			array_push($log, array('detail' => $p, 'aktivitas' => $aktivitas));
 
@@ -1464,7 +1465,8 @@ class NelayanUserV2Controller extends Controller
 							RIGHT JOIN laporan_penangkapanaktivitasdetail B ON B.id_laporanpenangkapan = A.id_laporanpenangkapan
 							WHERE
 								A.id_user = ? AND
-								A.id_log = ?"),array($p->id_user, $p->id_log));
+								A.id_log = ? AND
+								A.id_laporanpenangkapan = ?"),array($p->id_user, $p->id_log, $p->id_laporanpenangkapan));
 			
 			array_push($log, array('detail' => $p, 'aktivitas' => $aktivitas));
 		}
