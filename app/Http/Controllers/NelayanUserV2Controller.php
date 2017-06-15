@@ -1439,6 +1439,7 @@ class NelayanUserV2Controller extends Controller
 			$aktivitas = DB::select(
 					DB::raw("SELECT
 								CONCAT('Aktivitas tgl. ', tanggal) AS nama_aktivitas,
+								(SELECT C.nama_aktivitas FROM laporan_penangkapanaktivitas C WHERE C.id_aktivitas = B.id_aktivitas) AS jenis_aktivitas,
 								B.*
 							FROM
 								laporan_penangkapan A
