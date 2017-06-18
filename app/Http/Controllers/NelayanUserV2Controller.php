@@ -170,9 +170,9 @@ class NelayanUserV2Controller extends Controller
         $result = DB::table('tpi_kebutuhan')
 			->select('tpi_kebutuhan.*'
 						, DB::raw('(SELECT jenis_ikan.nama_ikan FROM jenis_ikan WHERE jenis_ikan.id_jenisikan = tpi_kebutuhan.jenis_ikan) as nama_ikan')
-						, DB::raw('(SELECT users.username FROM users WHERE users.id_user = tpi_kebutuhan.id_user) as username')
-						, DB::raw('(SELECT detail_users.firstname FROM detail_users WHERE detail_users.id_user = tpi_kebutuhan.id_user) as firstname')
-						, DB::raw('(SELECT detail_users.lastname FROM detail_users WHERE detail_users.id_user = tpi_kebutuhan.id_user) as lastname'))
+						, DB::raw('(SELECT user_.username FROM user_ WHERE user_.id_user = tpi_kebutuhan.id_user) as username')
+						, DB::raw('(SELECT user_pembelidetail.nama_depan FROM user_pembelidetail WHERE user_pembelidetail.id_user = tpi_kebutuhan.id_user) as firstname')
+						, DB::raw('(SELECT user_pembelidetail.nama_belakang FROM user_pembelidetail WHERE user_pembelidetail.id_user = tpi_kebutuhan.id_user) as lastname'))
 			->where('tpi_kebutuhan.id_tpi', $id_tpi)
             ->get();
 		
@@ -1383,7 +1383,7 @@ class NelayanUserV2Controller extends Controller
     {
         $param = array(
             'id_aktivitasdetail' => $request->input('id_aktivitasdetail'),
-			'id_jenisikans' => $request->input('id_jenisikan'),
+			'id_jenisikan' => $request->input('id_jenisikan'),
 			'Ekor' => $request->input('ekor'),
 			'KG' => $request->input('kg'),
         );
@@ -1459,6 +1459,7 @@ class NelayanUserV2Controller extends Controller
 			$aktivitas = DB::select(
 					DB::raw("SELECT
 								CONCAT('Aktivitas tgl. ', tanggal) AS nama_aktivitas,
+								(SELECT C.nama_aktivitas FROM laporan_penangkapanaktivitas C WHERE C.id_aktivitas = B.id_aktivitas) AS jenis_aktivitas,
 								B.*
 							FROM
 								laporan_penangkapan A
@@ -1473,17 +1474,17 @@ class NelayanUserV2Controller extends Controller
 
 		array_push($hasil, $log);
 					
-		if($penangkapan_jenislog1){
+		//if($penangkapan_jenislog1){
 			return response()->json(
                 array('log' => $hasil[0],
 				'status' => true,
                 'msg' => 'data berhasil diambil!'), 200);
-		}
-		else{
+		//}
+		//else{
 				return response()->json(
 					array('status' => false,
 						'msg' => 'terjadi kesalahan silahkan cek koneksi!'), 200);
-			}
+		//	}
     }
 
 	public function getKomposisiTangkapan($aktivitasId)
