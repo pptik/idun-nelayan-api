@@ -1402,10 +1402,27 @@ class NelayanUserV2Controller extends Controller
     }
 
 	public function searchkapal($kapal)
+    {		
+		$result = DB::select(
+					DB::raw("SELECT * FROM detail_kapal A WHERE A.nama_kapal LIKE '%".$kapal."%' AND A.gross_tonnage > 5"));
+					
+		if($result){
+			return response()->json(
+                array('results' => $result,
+				'status' => true,
+                    'msg' => 'data berhasil diambil!'), 200);
+		}
+		else{
+				return response()->json(
+					array('status' => false,
+						'msg' => 'terjadi kesalahan silahkan cek koneksi!'), 200);
+			}
+    }
+	
+	public function searchkapal5T($kapal)
     {
-		$result = DB::table('detail_kapal')
-				->where('detail_kapal.nama_kapal', 'LIKE', '%' . $kapal . '%')
-				->get();
+		$result = DB::select(
+					DB::raw("SELECT * FROM detail_kapal A WHERE A.nama_kapal LIKE '%".$kapal."%' AND A.gross_tonnage <= 5"));
 
 		if($result){
 			return response()->json(

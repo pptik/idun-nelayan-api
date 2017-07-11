@@ -87,4 +87,5 @@ Route::group(['prefix' => 'permintaanikan-v1', 'middleware' => 'Cors'], function
 Route::group(['prefix' => 'datakapal-v1', 'middleware' => 'Cors'], function()
 {
 	Route::get('search/{value}', 'NelayanUserV2Controller@searchkapal');
+	Route::get('search5T/{value}', 'NelayanUserV2Controller@searchkapal5T');
 });
