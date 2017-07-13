@@ -79,6 +79,7 @@ Route::group(['prefix' => 'hasiltangkapan-v1', 'middleware' => 'Cors'], function
 	Route::post('penangkapan', 'NelayanUserV2Controller@storePenangkapan');
 	Route::post('aktivitas', 'NelayanUserV2Controller@storeAktivitasPenangkapan');
 	Route::post('komposisihasil', 'NelayanUserV2Controller@storeKomposisiPenangkapan');
+	Route::post('hasiltangkapan5T', 'NelayanUserV2Controller@hasiltangkapan5T');
 });
 Route::group(['prefix' => 'permintaanikan-v1', 'middleware' => 'Cors'], function()
 {

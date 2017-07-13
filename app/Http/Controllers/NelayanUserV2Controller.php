@@ -986,6 +986,56 @@ class NelayanUserV2Controller extends Controller
 		}
     }
 	
+	public function hasiltangkapan5T(Request $request)
+    {
+        $dt = Carbon::now();
+		//
+	
+		$app_url = env('APP_URL', 'http://167.205.7.228:8088/v1');
+		$fotosourcename="default.png";
+        if ($request->hasFile('foto_source')){
+           if ($request->file('foto_source')->isValid()) {
+		   
+				$fotosourcename = $request->file('foto_source')->getClientOriginalName();
+				$request->file('foto_source')->move(
+					base_path() . '/resources/assets/image/', $fotosourcename
+				);
+          }
+        }
+		$foto_source=$app_url . '/resources/assets/image/'. $fotosourcename;
+		
+		//
+		$id_user1=$request->input('id_user');
+		$latitude=$request->input('latitude');
+		$longitude=$request->input('longitude');
+		$id_jenisikan=$request->input('id_jenisikan');
+		$id_kapal=$request->input('id_kapal');
+		$berat=$request->input('berat');
+		$harga_perkg=$request->input('harga_perkg');
+		
+		$param = array(
+			'id_jenisikan' => $id_jenisikan,
+			'id_kapal' => $id_kapal,
+			'id_user' => $id_user1,
+			'berat' => $berat,
+			'foto_source' => $foto_source,
+			'harga_perkg' => $harga_perkg,
+			'longitude' => $longitude,
+			'latitude' => $latitude,
+		);
+		$result = DB::table('hasiltangkapan_5T')->insert($param);
+
+		if($result){
+		   return response()->json(
+				array('status' => true,
+					'msg' => 'hasil tangkapan berhasil di posting'), 200);
+		}else{
+			return response()->json(
+				array('status' => false,
+					'msg' => 'terjadi kesalahan pada memasukan data!'), 200);
+		}
+    }
+	
 	private function postlaporan($id_user1,$jenis_laporan,$latitude,$longitude){
 		 $param = array(
             'id_user' => $id_user1,
